@@ -24,7 +24,7 @@ using the thing.
 
 ## Quick start
 
-Clone this repo and look at `example/` — it's a complete, tiny site:
+Clone this repo and look at `example/`, a complete, tiny site:
 
 ```sh
 git clone https://github.com/okubax/ssg.py.git
@@ -52,19 +52,20 @@ looking at a draft. `build` is the real thing.
 ```
 config.yml          site-wide settings
 content/
-  posts/             blog posts — Markdown, YAML front matter
-  pages/             standalone pages — Markdown or HTML
+  posts/             blog posts: Markdown, YAML front matter
+  pages/             standalone pages: Markdown or HTML
   index.html         root-level files, rendered as templates
-  404.html           (front matter decides the URL — see below)
+  404.html           (front matter decides the URL, see below)
 templates/           HTML templates
 static/              copied into output/ byte-for-byte
-output/              the built site — generated, never edit by hand
+output/              the built site: generated, never edit by hand
 ```
 
 Nothing here is mandatory except `config.yml`. No posts, no pages, no
-static folder — the build just produces less. There's no plugin system,
-no config option you have to discover to turn a feature on; if a template
-file with the right name exists, ssg.py renders the pages that need it.
+static folder, and the build just produces less. There's no plugin
+system, no config option you have to discover to turn a feature on; if
+a template file with the right name exists, ssg.py renders the pages
+that need it.
 
 ## Front matter
 
@@ -85,16 +86,16 @@ The rest of the file is Markdown.
 For posts, the date and the last part of the URL both default to the
 filename (`2026-01-05-my-post.md`), so for most posts you don't need a
 `date:` field at all. Set one explicitly to override it, or set `slug:`
-to control the URL independently of the filename — useful when a
-filename and a good URL want to be different things.
+to control the URL independently of the filename, which is useful when
+a filename and a good URL want to be different things.
 
-Recognised keys: `title`, `date`, `slug`, `tags` (a list), `category` (a
-single value — ssg.py has one category per post, not many), `author`,
-`description`, `summary`, `template` (which template file renders this
-post/page), `permalink` (an exact URL, overriding the `post_url`/`page_url`
-pattern), `draft: true` (excluded from `build`, included with
-`build --drafts`). Anything else you put in front matter also becomes
-available in your templates as `page.whatever_you_called_it`.
+Recognised keys: `title`, `date`, `slug`, `tags` (a list), `category`
+(a single value, since ssg.py has one category per post, not many),
+`author`, `description`, `summary`, `template` (which template file
+renders this post/page), `permalink` (an exact URL, overriding the
+`post_url`/`page_url` pattern), `draft: true` (excluded from `build`,
+included with `build --drafts`). Anything else you put in front matter
+also becomes available in your templates as `page.whatever_you_called_it`.
 
 ## Templates
 
@@ -125,7 +126,8 @@ Filters ship built in: `e`/`escape`, `date(fmt)`, `date_iso`, `slugify`,
 attr)`, `default(fallback)`, `striptags`, `truncate(n)`,
 `truncatewords(n)`, `replace(old, new)`, `json`, `first`, `last`,
 `sort(attr, reverse)`, `strip`, `absolute(base)`. Adding your own is a
-five-line function:
+five-line function, dropped anywhere in `ssg.py` itself since there's no
+plugin loader to configure:
 
 ```python
 @filter_('shout')
@@ -133,8 +135,7 @@ def _f_shout(v):
     return str(v).upper() + '!'
 ```
 
-— dropped anywhere in `ssg.py` itself, since there's no plugin loader to
-configure; the file you're editing *is* the whole program.
+The file you're editing *is* the whole program.
 
 ### Which template renders what
 
@@ -151,13 +152,13 @@ configure; the file you're editing *is* the whole program.
 That "only built if the template exists" rule is the whole extension
 mechanism. Don't want tag pages? Don't create `tag.html`. Want an
 author archive? Add `author.html` and `author_url` to `config.yml`, and
-it starts appearing — no other configuration.
+it starts appearing, with no other configuration needed.
 
 ### Building a theme from scratch
 
-A minimal theme is three files:
+A minimal theme is three files.
 
-**`templates/base.html`** — the shell every page shares:
+**`templates/base.html`** is the shell every page shares:
 
 ```html
 <!DOCTYPE html>
@@ -169,7 +170,7 @@ A minimal theme is three files:
 </html>
 ```
 
-**`templates/index.html`** — the post list, extending the shell:
+**`templates/index.html`** is the post list, extending the shell:
 
 ```html
 {% extends "base.html" %}
@@ -180,7 +181,7 @@ A minimal theme is three files:
 {% endblock %}
 ```
 
-**`templates/post.html`** — a single post:
+**`templates/post.html`** is a single post:
 
 ```html
 {% extends "base.html" %}
@@ -191,9 +192,9 @@ A minimal theme is three files:
 ```
 
 That's a working, if plain, site. `example/` in this repo takes it a bit
-further (tags, an about page, a stylesheet) but the shape doesn't change
-as a site grows — everything else is templates including more `{% for %}`
-loops and more filters, not new mechanism.
+further (tags, an about page, a stylesheet), but the shape doesn't
+change as a site grows. Everything else is templates, including more
+`{% for %}` loops and more filters, not new mechanism.
 
 ## config.yml
 
@@ -221,28 +222,28 @@ paginate_path: /page{num}/
 
 atom_feed: /atom.xml
 json_feed: /feed.json
-search_index: /search.json    # {title, url, tags, ...} per post — wire up your own client-side search
+search_index: /search.json    # {title, url, tags, ...} per post, for wiring up your own client-side search
 sitemap: true
 
 smart_quotes: true            # curly quotes, en/em dashes, in Markdown output
 ```
 
-Anything else — `navigation`, `social`, an AdSense client ID, a Matomo
-site ID, whatever your templates want to read as `site.x` — is yours to
+Anything else (`navigation`, `social`, an AdSense client ID, a Matomo
+site ID, whatever your templates want to read as `site.x`) is yours to
 invent. `config.yml` is passed to every template basically verbatim.
 
 ## What it deliberately doesn't do
 
 No asset pipeline (bring your own CSS, or a `Makefile` if you want
-Sass). No plugin system (see above — you edit the file). No incremental
+Sass). No plugin system (see above: you edit the file). No incremental
 build cache (`build` always starts from a clean `output/`; it's fast
-enough on real sites — a few hundred pages in well under a second — that
+enough on real sites, a few hundred pages in well under a second, that
 this has never mattered in practice). No multi-language/i18n support.
-If you need any of these, a mature tool like Hugo, Zola, or Eleventy will
-serve you better — this project's whole reason to exist is being small
-enough to read start to finish in one sitting, not being the most capable
-generator available.
+If you need any of these, a mature tool like Hugo, Zola, or Eleventy
+will serve you better. This project's whole reason to exist is being
+small enough to read start to finish in one sitting, not being the most
+capable generator available.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
