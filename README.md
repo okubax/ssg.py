@@ -17,8 +17,8 @@ I wrote this to run my own sites (a personal blog, a small African news
 site, a school site, a charity site) after getting tired of each one
 depending on a different tool, a different Ruby or Node version, and a
 different set of half-remembered quirks. There's a longer version of
-that story [on my blog](https://okubax.co.uk/2026/09/15/building-my-own-static-site-generator/),
-and a walkthrough of [how the templates and themes actually work](https://okubax.co.uk/2026/09/20/ssg-py-templates-and-themes/)
+that story [on my blog](https://okubax.co.uk/2026/08/15/building-my-own-static-site-generator/),
+and a walkthrough of [how the templates and themes actually work](https://okubax.co.uk/2026/09/11/ssg-py-templates-and-themes/)
 if you want the background; this README is the reference for actually
 using the thing.
 
