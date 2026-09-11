@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Tag: {{ tag.name }}</h1>
+<ul class="posts">
+  {% for post in tag.posts %}
+  <li><a href="{{ post.url }}">{{ post.title }}</a> <time>{{ post.date | date("%d %b %Y") }}</time></li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,21 @@
+title: My Example Site
+description: A tiny site built with ssg.py
+author: Your Name
+url: https://example.com
+
+post_url: /{year}/{month}/{day}/{slug}/
+page_url: /{slug}/
+tag_url: /tag/{slug}.html
+
+paginate: 5
+paginate_first: /
+paginate_path: /page{num}/
+
+atom_feed: /atom.xml
+sitemap: true
+
+navigation:
+  - title: Home
+    url: /
+  - title: About
+    url: /about
